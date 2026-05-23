@@ -2,9 +2,13 @@
 
 namespace App\Filament\Resources\Permissions\Tables;
 
+use Filament\Actions\BulkAction;
+use Filament\Actions\BulkActionGroup;
+use Filament\Actions\DeleteAction;
 use Filament\Actions\EditAction;
 use Filament\Tables\Columns\TextColumn;
 use Filament\Tables\Table;
+use Illuminate\Database\Eloquent\Collection;
 
 class PermissionsTable
 {
@@ -13,16 +17,28 @@ class PermissionsTable
         return $table
             ->columns([
                 TextColumn::make('name')
-                    ->searchable(),
+                    ->label('Name')
+                    ->searchable()
+                    ->sortable(),
 
                 TextColumn::make('guard_name')
-                    ->searchable(),
-            ])
-            ->filters([
-                //
+                    ->label('Guard name')
+                    ->searchable()
+                    ->sortable(),
             ])
             ->recordActions([
                 EditAction::make(),
+            ])
+            ->toolbarActions([
+                BulkActionGroup::make([
+                    BulkAction::make('delete_selected')
+                        ->label('Delete selected')
+                        ->color('danger')
+                        ->requiresConfirmation()
+                        ->action(function (Collection $records): void {
+                            $records->each->delete();
+                        }),
+                ]),
             ]);
     }
 }

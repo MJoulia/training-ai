@@ -4,13 +4,22 @@ namespace App\Filament\Resources\Permissions\Schemas;
 
 use Filament\Schemas\Schema;
 
+use Filament\Forms\Components\TextInput;
+
 class PermissionForm
 {
     public static function configure(Schema $schema): Schema
     {
-        return $schema
+         return $schema
             ->components([
-                //
+                TextInput::make('name')
+                    ->required()
+                    ->maxLength(255),
+
+                TextInput::make('guard_name')
+                    ->default('web')
+                    ->required(),
             ]);
+    
     }
 }
