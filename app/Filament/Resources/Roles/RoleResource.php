@@ -18,6 +18,9 @@ use Filament\Support\Icons\Heroicon;
 use Filament\Tables\Table;
 use Spatie\Permission\Models\Role;
 
+use Filament\Actions\CreateAction;
+use Illuminate\Database\Eloquent\Model;
+
 class RoleResource extends Resource
 {
     protected static ?string $model = Role::class;
@@ -61,7 +64,27 @@ class RoleResource extends Resource
         ];
     }
 
+    public static function getNavigationBadge(): ?string
+    {
+        return null;
+    }
+
     public static function canCreate(): bool
+    {
+        return true;
+    }
+
+    public static function canDelete($record): bool
+    {
+        return true;
+    }
+
+    public static function canDeleteAny(): bool
+    {
+        return true;
+    }
+
+    public static function canEdit(Model $record): bool
     {
         return true;
     }

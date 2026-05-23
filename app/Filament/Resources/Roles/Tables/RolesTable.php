@@ -2,20 +2,19 @@
 
 namespace App\Filament\Resources\Roles\Tables;
 
+use Filament\Actions\BulkAction;
 use Filament\Actions\BulkActionGroup;
 use Filament\Actions\DeleteAction;
-use Filament\Actions\DeleteBulkAction;
 use Filament\Actions\EditAction;
 use Filament\Tables\Columns\TextColumn;
 use Filament\Tables\Table;
-use Filament\Actions\CreateAction;
+use Illuminate\Database\Eloquent\Collection;
 
 class RolesTable
 {
     public static function configure(Table $table): Table
     {
         return $table
-            ->selectable()
             ->columns([
                 TextColumn::make('name')
                     ->label('Name')
@@ -27,20 +26,19 @@ class RolesTable
                     ->searchable()
                     ->sortable(),
             ])
-            ->filters([
-                //
-            ])
             ->recordActions([
                 EditAction::make(),
                 DeleteAction::make(),
             ])
-            ->headerActions([
-                CreateAction::make(),
-            ])
-
             ->toolbarActions([
                 BulkActionGroup::make([
-                    DeleteBulkAction::make(),
+                    BulkAction::make('delete_selected')
+                        ->label('Delete selected')
+                        ->color('danger')
+                        ->requiresConfirmation()
+                        ->action(function (Collection $records): void {
+                            $records->each->delete();
+                        }),
                 ]),
             ]);
     }
